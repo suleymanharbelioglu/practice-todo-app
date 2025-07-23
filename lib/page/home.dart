@@ -6,6 +6,7 @@ import 'package:practice_todo_app/helper/translation_helper.dart';
 import 'package:practice_todo_app/main.dart';
 import 'package:practice_todo_app/model/task.dart';
 import 'package:practice_todo_app/widget/custom_search_delegate.dart';
+import 'package:practice_todo_app/widget/task_list_item.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -57,6 +58,31 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      body: _allTasks.isNotEmpty
+          ? ListView.builder(
+              itemBuilder: (context, index) {
+                var _oankiListeElemani = _allTasks[index];
+                return Dismissible(
+                  background: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.delete, color: Colors.grey),
+                      const SizedBox(width: 8),
+                      Text('remove_task').tr(),
+                    ],
+                  ),
+                  key: Key(_oankiListeElemani.id),
+                  onDismissed: (direction) {
+                    _allTasks.removeAt(index);
+                    _localStorage.deleteTask(task: _oankiListeElemani);
+                    setState(() {});
+                  },
+                  child: TaskListItem(task: _oankiListeElemani),
+                );
+              },
+              itemCount: _allTasks.length,
+            )
+          : Center(child: Text('empty_task_list').tr()),
     );
   }
 
